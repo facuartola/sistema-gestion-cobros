@@ -4,6 +4,8 @@ Aplicación web que desarrollé como freelance para la administración de una **
 
 > Este repositorio es una versión pública del proyecto: sin claves, sin datos reales y sin el nombre de la clienta. Las capturas son del **modo demo**, que usa datos inventados.
 
+**[▶ Ver demo en video (45 s)](https://youtu.be/8ZTCAMH56X0)**
+
 ![Inicio](docs/capturas/inicio.png)
 
 ## Qué resuelve

@@ -1,0 +1,20 @@
+# Deploy en Netlify. Next.js corre con el adaptador oficial (OpenNext,
+# @netlify/plugin-nextjs, fijado en devDependencies para que la versión no
+# cambie sola entre deploys). Las páginas estáticas van al CDN y todo lo
+# dinámico (las rutas de app/api) corre en una Netlify Function generada por
+# el plugin. Ver "Deploy en Netlify" en el README.
+
+[build]
+  command = "npm run build"
+  # Es el .next de Next: el plugin lo toma de acá y arma el sitio. No es
+  # una carpeta estática para servir tal cual.
+  publish = ".next"
+
+[build.environment]
+  # La misma versión con la que se verificó el build local.
+  NODE_VERSION = "24"
+  # NEXT_PUBLIC_SUPABASE_URL y NEXT_PUBLIC_SUPABASE_ANON_KEY se cargan en
+  # Netlify (Site configuration > Environment variables), no en el repo.
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"

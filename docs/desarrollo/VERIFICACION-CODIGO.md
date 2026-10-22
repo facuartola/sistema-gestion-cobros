@@ -8,7 +8,7 @@ Pasada de limpieza: no agrega funciones. Cada corrección es un commit chico, co
 ### Crítico
 - Ninguno encontrado en el código.
 - (Conocido, no nuevo) `next` 14.2.35 tiene un aviso crítico de `npm audit` sin parche
-  en la rama 14; ver README «Estado de npm audit» y `docs/INFORME-NEXT-16.md`.
+  en la rama 14; ver README «Estado de npm audit» y `docs/desarrollo/INFORME-NEXT-16.md`.
   **Propuesta:** planificar la actualización de Next (decisión de arquitectura, no tocada).
 
 ### Alto
@@ -88,7 +88,7 @@ respuesta), que es el mismo orden en todas a propósito.
 - Partir las pantallas más largas: `ModuloPlanilla` (361 líneas), `PagoGastoModal` (325,
   complejidad 50), `PanelCliente` (307), `CobrosPagina` (297), `GastosPagina` (267),
   `AuthGate` (277), `crearCertificacionDemo` (325) y `inicio/Bloques.js` (701 líneas).
-- Actualizar a Next 16 (ver `docs/INFORME-NEXT-16.md`) para cerrar el aviso crítico.
+- Actualizar a Next 16 (ver `docs/desarrollo/INFORME-NEXT-16.md`) para cerrar el aviso crítico.
 - Paginación en listados (hoy sin límite; el volumen esperado son decenas de personas).
 - Capturas `despues-*.jpg` y `despues2-*` muestran la interfaz de pasadas anteriores
   (con datos TEST o demo): se pueden borrar si ya no hacen falta.

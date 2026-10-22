@@ -9,7 +9,7 @@ celular, una hoja que sube desde abajo). Atajos de teclado: siguen todos
 
 | Antes | Ahora |
 |---|---|
-| Resultado, gráfico, 4 tarjetas, "Para hacer hoy", "Próximos 7 días", "Últimos movimientos" | Panel de Inicio: indicadores, gráficos, "Para hacer", próximos 30 días, "Quién debe" y últimos movimientos (ver `docs/INICIO.md`) |
+| Resultado, gráfico, 4 tarjetas, "Para hacer hoy", "Próximos 7 días", "Últimos movimientos" | Panel de Inicio: indicadores, gráficos, "Para hacer", próximos 30 días, "Quién debe" y últimos movimientos (ver `docs/desarrollo/INICIO.md`) |
 | "Cobré a alguien" (C) | Botón grande del Inicio, "+ Nuevo" y tecla C: ventana de cobro de un solo paso |
 | "Pagué un gasto" (G) | Botón del Inicio, "+ Nuevo" y tecla G |
 | "Marcar sesión realizada" (S) | "Registré una clase o sesión" (Inicio y "+ Nuevo") lleva al módulo en curso con su planilla (ahí se marcan clases y sesiones). La ventana "Marcar sesión realizada" sigue en Certificación › Alumnos › "Marcar una sesión", en el panel de cada alumno y con la tecla S |

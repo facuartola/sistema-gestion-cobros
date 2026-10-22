@@ -1,26 +1,28 @@
 # Sistema de gestión de cobros y gastos
 
-Aplicación web que desarrollé como freelance para la administración de una **consultora de coaching deportivo**. Hoy está **en uso diario**: con ella llevan las cuotas de sus clientes, los gastos del negocio y los pagos al equipo de la certificación que dictan.
+Aplicación web full stack para la administración de una **consultora de coaching deportivo**. La desarrollé como freelance y está **en producción, con uso diario**: la clienta lleva ahí las cuotas de sus clientes, los gastos del negocio y los pagos al equipo de la certificación que dicta.
 
-> Este repositorio es una versión pública del proyecto: sin claves, sin datos reales y sin el nombre de la clienta. Las capturas son del **modo demo**, que usa datos inventados.
+> Versión pública del proyecto: sin claves, sin datos reales y sin el nombre de la clienta. Las capturas son del **modo demo**, que usa datos inventados.
 
-**[▶ Ver demo en video (45 s)](https://youtu.be/8ZTCAMH56X0)**
+**[▶ Demo en video (45 s)](https://youtu.be/8ZTCAMH56X0)**
 
 ![Inicio](docs/capturas/inicio.png)
 
+`JavaScript` `React 18` `Next.js 14` `Node.js` `PostgreSQL` `Supabase` `Vitest` `Netlify`
+
 ## Qué resuelve
 
-Al entrar, el sistema muestra **qué falta cobrar, qué hay que pagar y qué hacer hoy**, para que no se pase ninguna cuota vencida ni un pago al equipo. Cada movimiento se registra en pocos clics y lo usa una persona sin conocimientos técnicos.
+Al entrar, el sistema muestra **qué falta cobrar, qué hay que pagar y qué hacer hoy**. Lo usa una persona sin conocimientos técnicos, así que cada operación se resuelve en pocos clics y los mensajes de error están escritos para ella, no para un desarrollador.
 
 ## Funcionalidades
 
-- **Inicio** con dos vistas: *Hoy*, con la lista de cosas para hacer y quién debe, y *Análisis*, con el resultado del mes, la tasa de cobranza y un gráfico de ingresos y gastos de los últimos 6 meses.
-- **Cobros** de dos tipos de clientes (jugadores y alumnos de la certificación): monto mensual, día de vencimiento, estado de cada cuota (pagó, vence, atrasado) y meses adeudados.
-- **Gastos** organizados en un árbol de categorías editable, con vencimientos, historial y comprobantes adjuntos.
-- **Certificación por módulos**: clases y sesiones dictadas, avance de los alumnos y liquidación de los pagos al equipo cuando termina cada módulo.
-- **Recordatorios** manuales y sugeridos automáticamente a partir de los datos.
-- **Exportación a CSV** y **copia de seguridad** descargable, con instrucciones para restaurarla.
-- **Modo demo** (`/demo`): recorre la app completa con datos inventados, sin login y sin tocar la base.
+- **Cobros** de dos tipos de clientes (jugadores y alumnos): monto mensual, día de vencimiento, estado de cada cuota y meses adeudados.
+- **Gastos** en un árbol de categorías editable, con vencimientos, historial y comprobantes adjuntos.
+- **Certificación por módulos**: clases dictadas, avance de los alumnos y cálculo de los pagos al equipo al cerrar cada módulo.
+- **Panel de Inicio** con resultado del mes, tasa de cobranza y gráfico de los últimos 6 meses.
+- **Recordatorios** manuales y sugeridos a partir de los datos.
+- **Exportación a CSV** compatible con Excel en configuración regional argentina, y **copia de seguridad** descargable con script de restauración.
+- **Modo demo** (`/demo`): la app completa con datos inventados, sin login y sin tocar la base.
 
 | Análisis | Cobros |
 |---|---|
@@ -28,53 +30,63 @@ Al entrar, el sistema muestra **qué falta cobrar, qué hay que pagar y qué hac
 | **Registrar un cobro** | **Gastos** |
 | ![Registrar cobro](docs/capturas/registrar-cobro.png) | ![Gastos](docs/capturas/gastos.png) |
 
-## Tecnologías
+## Arquitectura
 
-- **Next.js 14** (App Router) y **React 18**
-- **Supabase**: PostgreSQL, Auth y Storage, con **Row Level Security**
-- **Rutas de API propias** (`app/api`) que validan la sesión antes de leer o escribir datos
-- **Vitest**: **más de 500 tests automatizados** sobre la lógica de negocio
-- **Netlify** para el deploy, con una función programada que mantiene activa la base
+```mermaid
+flowchart LR
+    U["Navegador (React)"] -- "fetch + Bearer token" --> API["API REST en Node.js<br/>valida la sesión"]
+    API -- "cliente por request con el token del usuario" --> DB[("PostgreSQL + RLS")]
+    U -- login --> AUTH["Supabase Auth"]
+    CRON["Función programada (Netlify)"] --> SALUD["GET /api/salud"] --> DB
+```
 
-## Seguridad y datos
+- **El frontend nunca habla directo con las tablas.** Todas las lecturas y escrituras pasan por la API propia (`app/api`, 31 rutas REST).
+- **Cada request crea un cliente de Supabase con el token del usuario** (`lib/supabaseServer.js`). Así las políticas de **Row Level Security** se evalúan como ese usuario y no como anónimo.
+- **La sesión se valida explícitamente** antes de consultar (`lib/apiAuth.js`). Sin este chequeo, una sesión vencida devolvía listas vacías con 200 en lugar de un 401, y la interfaz mostraba "no hay datos" en vez de pedir login.
+- **La lógica de negocio vive en `lib/`**, separada de las rutas y de los componentes, y es lo que cubren los tests.
 
-- Solo pueden entrar los usuarios de una **lista de administradores**; el registro público está bloqueado a nivel base de datos.
-- Todas las tablas tienen **RLS**, así que la clave pública no alcanza para leer nada sin sesión.
-- Validaciones de montos, fechas y límites, tanto en el servidor como en la base.
-- El esquema completo está versionado en `supabase/migrations`.
+## Decisiones técnicas
 
-## Cómo lo construí
+- **Seguridad en dos capas.** La API valida la sesión, y además la base tiene RLS en todas las tablas con una lista de administradores. La función `es_admin` es `security definer` y está en un esquema privado para que no se pueda llamar desde la API pública. El registro de usuarios nuevos está bloqueado a nivel base.
+- **Validación en API y en base.** Montos, fechas y límites se validan en el servidor (`lib/validacion.js`) y también con constraints en PostgreSQL, por si algún día otro cliente escribe en la base.
+- **Rutas compartidas en lugar de duplicadas.** Jugadores y alumnos tienen las mismas operaciones; en vez de seis archivos casi iguales, las rutas salen de una fábrica (`lib/rutasPersonas.js`) con la configuración de cada tipo.
+- **Esquema versionado.** Las 17 migraciones de `supabase/migrations` reconstruyen la base completa, y el script de restauración se prueba contra ellas con una base Postgres en memoria (PGlite).
+- **Fallas aisladas.** Cada bloque del Inicio tiene su propio límite de error: si un cálculo falla, se muestra un mensaje con "Reintentar" y el resto de la pantalla sigue funcionando. Los errores se registran en una tabla `errores_app`.
+- **Fechas en hora de Argentina.** Vencimientos y "hoy" se calculan siempre en `America/Argentina/Buenos_Aires` (`lib/fechas.js`), independientemente de la zona del servidor.
 
-Lo desarrollé con **Claude Code** como herramienta principal. La IA me sirvió para generar e iterar rápido, pero las decisiones las tomé yo:
+## Tests
 
-- Primero definí con la clienta qué necesitaba y diseñé el modelo de datos.
-- Antes de dar un cambio por bueno, lo reviso, lo pruebo en el navegador y corro los tests.
-- Registré las auditorías, verificaciones y decisiones en [`docs/`](docs) y el historial completo en [`CHANGELOG.md`](CHANGELOG.md).
-- Las mejoras salieron del uso real: lo que costaba entender o hacía perder tiempo se simplificó (ver [`docs/SIMPLIFICACION.md`](docs/SIMPLIFICACION.md) y [`docs/CRITERIOS-DE-USO.md`](docs/CRITERIOS-DE-USO.md)).
+**503 tests en 41 archivos** con Vitest, sobre la lógica de negocio: cálculo de deudas y cuotas, validaciones, armado del CSV, copia de seguridad, agrupación de gastos y textos de la interfaz.
+
+```bash
+npm test
+```
 
 ## Correrlo en local
+
+Requiere Node.js 20 o superior.
 
 ```bash
 npm install
 cp .env.local.example .env.local   # completar con los datos de tu proyecto de Supabase
 npm run dev                         # http://localhost:3000
-npm test                            # corre los tests
 ```
 
-Para ver la app sin configurar nada, abrí **`/demo`**: funciona sin Supabase y con datos de ejemplo.
+Para verla sin configurar nada, abrí **`/demo`**: funciona sin Supabase y con datos de ejemplo.
 
 ## Estructura
 
 ```
-app/            páginas (App Router) y rutas de API en app/api
+app/            páginas (App Router) y rutas de la API REST en app/api
 components/     interfaz: inicio, cobros, gastos, certificación, ventanas
 lib/            lógica de negocio, validaciones y sus tests (*.test.js)
-supabase/       migraciones SQL (tablas, RLS, funciones)
+supabase/       migraciones SQL (tablas, RLS, funciones, triggers)
+netlify/        función programada
 scripts/        restauración de copias de seguridad
-docs/           documentación técnica, auditorías y capturas
+docs/           documentación técnica y capturas
 ```
 
-Documentación técnica completa: [`docs/DOCUMENTACION-TECNICA.md`](docs/DOCUMENTACION-TECNICA.md).
+Documentación técnica completa en [`docs/DOCUMENTACION-TECNICA.md`](docs/DOCUMENTACION-TECNICA.md). Las notas de desarrollo y verificaciones de cada iteración están en [`docs/desarrollo/`](docs/desarrollo/).
 
 ---
 

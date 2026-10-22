@@ -520,7 +520,7 @@ entrada de esta auditoría.
    `/api` en la URL publicada y el tiempo de carga (la función está en Ohio y
    Supabase en São Paulo).
 8. **Actualizar Next**: planificar el paso a 15 o 16 (hallazgo 9). Hay un
-   informe previo en `docs/INFORME-NEXT-16.md`.
+   informe previo en `docs/desarrollo/INFORME-NEXT-16.md`.
 9. **Restricciones de la base**: si estás de acuerdo, aplicar el SQL de la
    Parte 2 con una migración (lo aplicás vos).
 

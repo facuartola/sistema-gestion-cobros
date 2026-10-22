@@ -7,7 +7,7 @@ pendiente hacer (cobrar, hacer seguimiento). El sistema **no le escribe a los
 clientes**: solo le recuerda cosas a quien lo usa.
 
 El historial detallado de cómo se construyó, pasada por pasada, está en
-[`CHANGELOG.md`](../CHANGELOG.md). Este archivo es el estado actual.
+[`docs/desarrollo/HISTORIAL.md`](../docs/desarrollo/HISTORIAL.md). Este archivo es el estado actual.
 
 
 ## Tanda final (2026-10-06)
@@ -17,7 +17,7 @@ El historial detallado de cómo se construyó, pasada por pasada, está en
 - **Gastos por tipo** agrupa por la carpeta que contiene el tipo (regla en `lib/panorama.js`, `gastosPorGrupo`).
 - **Relojes** de cuatro ciudades, **Imprimir** en Certificación y **barras cortadas** ante valores extremos.
 - La base tiene el automatismo `proteger_categorias` (migración `proteger_tipos_de_gasto`): la restauración (`scripts/restaurar-sql.js`) lo apaga durante la carga. Ver `docs/RESTAURAR.md`.
-- Máximos de clics por tarea: `docs/CRITERIOS-DE-USO.md`. Avance y puntos de corte: `docs/TANDA-FINAL.md`.
+- Máximos de clics por tarea: `docs/desarrollo/CRITERIOS-DE-USO.md`. Avance y puntos de corte: `docs/desarrollo/TANDA-FINAL.md`.
 
 ## Qué es
 
@@ -219,7 +219,7 @@ respeta (están como comentario al inicio de `app/globals.css`):
   de ingresos y gastos, repartos, quién debe, próximos 30 días y proyección, todo
   de solo lectura y con SVG propio. Las cuentas están en `lib/panorama.js` (con
   tests); los datos, en `/api/panorama` y `/api/resumen`. Qué muestra cada bloque
-  y de dónde sale cada número: `docs/INICIO.md`.
+  y de dónde sale cada número: `docs/desarrollo/INICIO.md`.
 - **Atajos**: C (cobro), G (pago de gasto), S (sesión realizada), N (cliente nuevo), R (recordatorio)
   fuera de los campos de texto y sin otra ventana abierta; Ctrl+K / Cmd+K busca
   personas, secciones, categorías de gasto (con su camino completo) y, de la
@@ -400,7 +400,7 @@ al mes siguiente. Los tests usan instantes con offset explícito, así el
 resultado no depende del huso de la máquina; se corren también con `TZ=UTC`
 (el huso del servidor). Ojo: en Windows, Node solo respeta `TZ=UTC`; las
 corridas que antes se anotaron "en Tokio, Los Ángeles y Kiritimati" en esta
-máquina en realidad usaron la hora de Argentina (ver `docs/AUDITORIA.md`).
+máquina en realidad usaron la hora de Argentina (ver `docs/desarrollo/AUDITORIA.md`).
 
 **El sistema nunca le escribe al cliente** (decisión de producto): no hay
 botón "Recordar", ni links a WhatsApp o mail, ni mensajes armados. Solo
@@ -545,10 +545,10 @@ colgados después de decenas de navegaciones seguidas.
 
 ## Acceso a los datos (RLS y registro público)
 
-El esquema completo está en [`supabase/migrations/`](./supabase/migrations)
+El esquema completo está en [`supabase/migrations/`](../supabase/migrations)
 (17 migraciones, en orden; ya están aplicadas en Supabase, no volver a
 aplicarlas; se comprobó que el esquema que producen es idéntico al de la base real,
-ver `docs/VERIFICACION-CODIGO.md`). El acceso funciona así:
+ver `docs/desarrollo/VERIFICACION-CODIGO.md`). El acceso funciona así:
 
 - Todas las tablas de `public` tienen RLS con una única política, "solo admins":
   `(select private.es_admin())`. Solo puede leer o escribir quien esté
@@ -592,12 +592,12 @@ hay parche dentro de la rama 14 de Next. Los avisos de `next` son sobre el
 optimizador de imágenes (`next/image`), `rewrites`, Server Actions, middleware y
 la caché de componentes de servidor: esta app no usa imágenes optimizadas,
 rewrites, Server Actions ni middleware. Con esa superficie el riesgo práctico es
-bajo, pero conviene planificar la actualización (ver `docs/INFORME-NEXT-16.md` y
-`docs/AUDITORIA.md`). La librería nueva `fflate` (copia de seguridad) no suma avisos.
+bajo, pero conviene planificar la actualización (ver `docs/desarrollo/INFORME-NEXT-16.md` y
+`docs/desarrollo/AUDITORIA.md`). La librería nueva `fflate` (copia de seguridad) no suma avisos.
 
 ## Deploy en Netlify
 
-La config ya está en el repo: [`netlify.toml`](./netlify.toml) (build
+La config ya está en el repo: [`netlify.toml`](../netlify.toml) (build
 `npm run build`, publish `.next`, Node 24) y el adaptador oficial
 `@netlify/plugin-nextjs` fijado en `devDependencies`. Las páginas van al CDN
 y **todas las rutas de `app/api` corren dentro de una sola Netlify Function**
@@ -673,10 +673,10 @@ a devolver 500 (pasó durante la verificación; con un build limpio, todo 200).
 
 ## Copia de seguridad, ayuda y mantener activo (tanda 6)
 
-- **Copia de todos los datos**: Configuración › "Copia de seguridad" (`GET /api/copia`, 401 sin sesión). Un .zip con una planilla por tabla, `datos.json`, `comprobantes.csv` y `LEEME.txt`; no entrega nada si alguna tabla no coincide con el conteo de la base. Los comprobantes (archivos) no vienen adentro. Cómo restaurar: [`docs/RESTAURAR.md`](./docs/RESTAURAR.md) (`scripts/restaurar-sql.js`). El plan gratuito de Supabase **no** tiene copias propias: conviene bajar una por mes (la app avisa a los 30 días).
+- **Copia de todos los datos**: Configuración › "Copia de seguridad" (`GET /api/copia`, 401 sin sesión). Un .zip con una planilla por tabla, `datos.json`, `comprobantes.csv` y `LEEME.txt`; no entrega nada si alguna tabla no coincide con el conteo de la base. Los comprobantes (archivos) no vienen adentro. Cómo restaurar: [`docs/RESTAURAR.md`](./RESTAURAR.md) (`scripts/restaurar-sql.js`). El plan gratuito de Supabase **no** tiene copias propias: conviene bajar una por mes (la app avisa a los 30 días).
 - **Ayuda**: `/ayuda` ("¿Cómo hago…?"), con buscador y para imprimir.
-- **Mantener activo**: `GET /api/salud` (pública, solo `{ok}`) y una función programada diaria de Netlify. Ver [`docs/MANTENER-ACTIVO.md`](./docs/MANTENER-ACTIVO.md). No reemplaza la copia.
-- Resumen y lo que no se pudo comprobar: [`docs/COPIA-Y-AYUDA.md`](./docs/COPIA-Y-AYUDA.md).
+- **Mantener activo**: `GET /api/salud` (pública, solo `{ok}`) y una función programada diaria de Netlify. Ver [`docs/MANTENER-ACTIVO.md`](./MANTENER-ACTIVO.md). No reemplaza la copia.
+- Resumen y lo que no se pudo comprobar: [`docs/desarrollo/COPIA-Y-AYUDA.md`](./desarrollo/COPIA-Y-AYUDA.md).
 
 ## Nota sobre el plan free de Supabase
 
@@ -687,7 +687,7 @@ dashboard de Supabase, tarda un par de minutos y no se pierden datos.
 ## Pendiente / a definir con vos
 
 - **Rama `next-16-evaluacion`**: evaluación completa en
-  [`docs/INFORME-NEXT-16.md`](./docs/INFORME-NEXT-16.md) — versiones, qué
+  [`docs/desarrollo/INFORME-NEXT-16.md`](./desarrollo/INFORME-NEXT-16.md) — versiones, qué
   hizo falta cambiar en el código, y una recomendación de migrar recién
   después del deploy inicial en Next 14.2.x.
 - **Módulo de alumnos "estilo Excel"**: si en algún momento se quiere la
@@ -701,4 +701,4 @@ dashboard de Supabase, tarda un par de minutos y no se pierden datos.
 
 El detalle pasada por pasada, incluyendo qué se verificó en navegador real
 contra qué se verificó solo leyendo o simulando código, está en
-[`CHANGELOG.md`](../CHANGELOG.md).
+[`docs/desarrollo/HISTORIAL.md`](../docs/desarrollo/HISTORIAL.md).

@@ -2,7 +2,7 @@
 
 Hecho en la rama `next-16-evaluacion` (commit `9543b31` + el fix de esta
 pasada), sin mergear a `main`. Reemplaza la referencia rota que tenía el
-README ("el informe al final de CHANGELOG.md", que nunca se había escrito).
+README ("el informe al final de docs/desarrollo/HISTORIAL.md", que nunca se había escrito).
 
 ## Versiones
 

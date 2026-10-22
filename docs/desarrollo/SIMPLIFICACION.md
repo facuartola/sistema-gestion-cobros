@@ -4,7 +4,7 @@ Objetivo: que la administradora lo entienda sin explicación. **No se pierde nin
 función**: se mueve, se agrupa o se esconde. Sesión 1: Fases 0 y 1; sesión 2:
 Fase 2 (Cobros y Gastos); sesión 3: Fase 3 (Certificación, Recordatorios,
 textos y celular) y los ajustes finales. Estado: **todas las fases hechas.**
-Dónde quedó cada función: `docs/MAPA-FUNCIONES.md`.
+Dónde quedó cada función: `docs/desarrollo/MAPA-FUNCIONES.md`.
 
 ## Fase 0. Inventario
 
@@ -208,7 +208,7 @@ los botones de guardar siguen creando una sola cosa (comprobado en vivo).
 - **A. Comparación de Inicio**: Cobrado, Gastado y Resultado comparan el mismo
   tramo del mes anterior (del 1 al día de hoy contra del 1 al mismo día), lo
   dicen en cada indicador y, sin movimientos en ese tramo, muestran "Sin datos
-  del mismo tramo del mes anterior". Tests y `docs/INICIO.md` al día.
+  del mismo tramo del mes anterior". Tests y `docs/desarrollo/INICIO.md` al día.
 - **B. CSV en Excel**: separador `;` (y coma decimal en los números) cuando el
   navegador usa coma decimal, y `,` en los demás casos; BOM UTF-8, comillas
   duplicadas y saltos de línea entre comillas. Los menús dicen "Exportar a Excel
@@ -256,4 +256,4 @@ los botones de guardar siguen creando una sola cosa (comprobado en vivo).
 - **Un tipo nuevo no obliga a salir del pago**: se crea dentro de la misma ventana.
 - **Se sacaron las ventanas del navegador** (`window.confirm`) de Mis gastos: desactivar avisa y ofrece «Deshacer»; borrar confirma en la misma fila.
 - Textos nuevos: «Cargar los montos», «Monto habitual», «Automático: lo genera Pagar al equipo», «Mostrar desactivados».
-- Diferencias con la consigna: ver `docs/TANDA-FINAL.md`.
+- Diferencias con la consigna: ver `docs/desarrollo/TANDA-FINAL.md`.

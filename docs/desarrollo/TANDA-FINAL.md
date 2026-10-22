@@ -21,7 +21,7 @@ Estado: **todos los puntos (A1 a D2) están hechos**. Sin push ni deploy. Los co
 | C1 Inicio en dos vistas | Hecho | `app/page.js`, `components/inicio/Bloques.js` |
 | C2 Valores extremos | Hecho | `recorteDeValores` en `lib/panorama.js`, `components/panel/BarrasAgrupadas.js` |
 | D1 Comprobaciones | Hecho, con las salvedades de abajo | Ver «Qué se comprobó» |
-| D2 Documentación | Hecho | `docs/CRITERIOS-DE-USO.md`, README, CHANGELOG, MAPA-FUNCIONES, SIMPLIFICACION, RESTAURAR, INICIO |
+| D2 Documentación | Hecho | `docs/desarrollo/CRITERIOS-DE-USO.md`, README, CHANGELOG, MAPA-FUNCIONES, SIMPLIFICACION, RESTAURAR, INICIO |
 
 ## A1: qué falló
 
@@ -44,7 +44,7 @@ La fila **no se borró**.
 - La **impresión en papel** de Certificación: no se miró la vista previa de impresión (no se sacaron capturas); las reglas están en `app/globals.css` (`@media print`) y siguen las del resto de la app.
 - La barra cortada por un valor extremo: probada con tests de la función, **no vista dibujada** (no hay datos extremos en la base ni en /demo).
 - El disparo del automatismo `proteger_categorias` contra la base real: se intentó un `UPDATE` de prueba y el permiso fue denegado por el entorno, así que no se corrió. Sí se comprobó en la base en memoria (PGlite) con las 17 migraciones reales: la restauración sin apagar los automatismos falla porque el trigger no deja borrar los tipos con clave.
-- Los máximos de clics de las tareas que no son de gastos: ver `docs/CRITERIOS-DE-USO.md`.
+- Los máximos de clics de las tareas que no son de gastos: ver `docs/desarrollo/CRITERIOS-DE-USO.md`.
 - El 1280 real: Chrome de esta máquina está maximizado; se midió con un `iframe` de ese ancho (que da 1279 px de ventana útil por el redondeo). Por eso la línea de relojes empieza en **1270 px**.
 
 ## Diferencias con la consigna, y por qué
